@@ -4,16 +4,19 @@ import { formatPrice } from '../../utils/helpers';
 import { ProductData } from 'types';
 import html from './productDetail.tpl.html';
 import { cartService } from '../../services/cart.service';
+import { favoritesService } from '../../services/favorites.service';
 
 class ProductDetail extends Component {
   more: ProductList;
   product?: ProductData;
+  isInFavorites: Boolean
 
   constructor(props: any) {
     super(props);
 
     this.more = new ProductList();
     this.more.attach(this.view.more);
+    this.isInFavorites = false;
   }
 
   async render() {
@@ -32,10 +35,17 @@ class ProductDetail extends Component {
     this.view.description.innerText = description;
     this.view.price.innerText = formatPrice(salePriceU);
     this.view.btnBuy.onclick = this._addToCart.bind(this);
+    this.view.btnFav.onclick = this._toggleFavorites.bind(this);
 
     const isInCart = await cartService.isInCart(this.product);
 
     if (isInCart) this._setInCart();
+
+    //check if product is in favorites
+    this.isInFavorites = await favoritesService.isInFavorites(this.product);
+
+    //apply styles on favBtn if product is in favorites
+    if (this.isInFavorites) this._toggleFavoritesIcon('#heart-filled');
 
     fetch(`/api/getProductSecretKey?id=${id}`)
       .then((res) => res.json())
@@ -60,6 +70,30 @@ class ProductDetail extends Component {
   private _setInCart() {
     this.view.btnBuy.innerText = '✓ В корзине';
     this.view.btnBuy.disabled = true;
+  }
+
+  //remove/add product to favorites
+  private _toggleFavorites() {
+    !this.isInFavorites ? this._addToFavorites() : this._removeFromFavorites();
+    this.isInFavorites = !this.isInFavorites;
+  }
+
+  private _addToFavorites() {
+    if (!this.product) return;
+
+    favoritesService.addProduct(this.product);
+    this._toggleFavoritesIcon('#heart-filled');
+  }
+
+  private _removeFromFavorites() {
+    if (!this.product) return;
+
+    favoritesService.removeProduct(this.product);
+    this._toggleFavoritesIcon('#heart');
+  }
+
+  private _toggleFavoritesIcon(href: String) {
+    this.view.btnFavIcon.setAttribute('xlink:href', href);
   }
 }
 
