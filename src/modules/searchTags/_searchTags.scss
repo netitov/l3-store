@@ -1,0 +1,27 @@
+.searchTags {
+  margin-bottom: 30px;
+  color: #000;
+  font-size: 22px;
+  font-weight: 550;
+  line-height: 24px;
+  padding: 12px 10px 0;
+
+  &__link {
+    border-radius: 8px;
+    background: #F6F6FA;
+    text-decoration: none;
+    display: inline-flex;
+  }
+
+  &__link-text {
+    background: linear-gradient(93deg, #DA15B8 4.93%, #8D06CC 100%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    padding: 4px 6px 8px;
+  }
+
+  &__link:hover &__link-text, &__link-text_active {
+    -webkit-text-fill-color: var(--key-color-dark);
+  }
+}
