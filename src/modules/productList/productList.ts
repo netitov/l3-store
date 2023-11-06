@@ -13,7 +13,7 @@ export class ProductList {
   constructor() {
     this.products = [];
     this.view = new ViewTemplate(html).cloneView();
-    this.observer = new IntersectionObserver(this._observeProductView, { threshold: 1.0 });
+    this.observer = new IntersectionObserver(this._observeProductView, { threshold: 0.5 });
   }
 
   attach($root: HTMLElement) {
@@ -38,14 +38,15 @@ export class ProductList {
     });
   }
 
-  private _observeProductView = (entries: IntersectionObserverEntry[]) => {
+  private _observeProductView = (entries: IntersectionObserverEntry[], observer: any) => {
     entries.forEach((entry) => {
+      
       if (entry.isIntersecting) {
         const productElement = entry.target as HTMLElement;
 
         const productId = Number(productElement.dataset.productId);
         const productData = this.products.find(i => i.id === productId);
-
+        
         if (productData) {
           const eventType = productData && Object.keys(productData.log).length > 0 ? 'viewCardPromo' : 'viewCard';
 
@@ -54,9 +55,10 @@ export class ProductList {
             .then((res) => res.json())
             .then((secretKey) => {
               analyticsService.sendAlaytics(eventType, { ...productData, secretKey });
-            });
+            })
+            .then(() => observer.unobserve(entry.target))
         }
-      }
+      } 
     });
   }
 
