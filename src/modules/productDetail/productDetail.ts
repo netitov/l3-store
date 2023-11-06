@@ -5,6 +5,7 @@ import { ProductData } from 'types';
 import html from './productDetail.tpl.html';
 import { cartService } from '../../services/cart.service';
 import { userService } from '../../services/user.service';
+import { preloader } from '../preloader/preloader';
 
 class ProductDetail extends Component {
   more: ProductList;
@@ -18,6 +19,10 @@ class ProductDetail extends Component {
   }
 
   async render() {
+    window.scrollTo({ top: 0 });
+
+    preloader.show();
+
     const urlParams = new URLSearchParams(window.location.search);
     const productId = Number(urlParams.get('id'));
 
@@ -53,7 +58,8 @@ class ProductDetail extends Component {
       .then((res) => res.json())
       .then((products) => {
         this.more.update(products);
-      });
+      })
+      .finally(() => preloader.hide());
   }
 
   private _addToCart() {

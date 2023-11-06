@@ -3,6 +3,7 @@ import { Component } from '../component';
 import html from './homepage.tpl.html';
 import { ProductList } from '../productList/productList';
 import { userService } from '../../services/user.service';
+import { preloader } from '../preloader/preloader';
 
 class Homepage extends Component {
   popularProducts: ProductList;
@@ -15,6 +16,9 @@ class Homepage extends Component {
   }
 
   async render() {
+
+    preloader.show();
+
     const userId = await userService.getId();
     fetch('/api/getPopularProducts', {
       headers: {
@@ -24,7 +28,8 @@ class Homepage extends Component {
       .then((res) => res.json())
       .then((products) => {
         this.popularProducts.update(products);
-      });
+      })
+      .finally(() => preloader.hide())
 
     const isSuccessOrder = new URLSearchParams(window.location.search).get('isSuccessOrder');
     if (isSuccessOrder != null) {

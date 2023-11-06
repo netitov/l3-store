@@ -2,6 +2,7 @@ import { Component } from '../component';
 import html from './catalog.tpl.html';
 import { ProductList } from '../productList/productList';
 import { userService } from '../../services/user.service';
+import { preloader } from '../preloader/preloader';
 
 class Catalog extends Component {
   productList: ProductList;
@@ -14,6 +15,7 @@ class Catalog extends Component {
   }
 
   async render() {
+    preloader.show();
     const userId = await userService.getId();
     const productsResp = await fetch('/api/getProducts', {
       headers: {
@@ -22,6 +24,7 @@ class Catalog extends Component {
     })
     const products = await productsResp.json();
     this.productList.update(products);
+    preloader.hide();
   }
 }
 

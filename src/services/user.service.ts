@@ -6,10 +6,6 @@ const ID_DB = '__wb-userId';
 class UserService {
   id: string | null = null;
 
-  constructor() {
-    this.id = localStorage.getItem('userId');
-  }
-
   async init() {
     this.id = await this.getId();
     console.warn('UserID: ', this.id);
@@ -17,9 +13,7 @@ class UserService {
 
   async getId(): Promise<string> {
     if (!this.id) {
-      //debugger
 
-      console.log('if')
       let id = await localforage.getItem(ID_DB) as string;
 
       if (!id) id = await this._setId();
@@ -27,18 +21,16 @@ class UserService {
 
       return id;
     } else {
-      console.log('else!', this.id)
       return this.id;
     }
-
   }
 
   private async _setId(): Promise<string> {
     const id = genUUID();
     await localforage.setItem(ID_DB, id);
-    localStorage.setItem('userId', id)
     return id;
   }
+
 }
 
 export const userService = new UserService();
