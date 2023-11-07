@@ -1,18 +1,18 @@
 import { Component } from '../component';
 import html from './catalog.tpl.html';
 import { ProductList } from '../productList/productList';
-import { SearchTags } from '../searchTags/searchTags';
+import { SearchTagList } from '../searchTagList/searchTagList';
 import { tags } from '../../utils/tags';
 
 class Catalog extends Component {
   productList: ProductList;
-  searchTags: SearchTags;
+  searchTags: SearchTagList;
 
   constructor(props: any) {
     super(props);
     this.productList = new ProductList();
     this.productList.attach(this.view.products);
-    this.searchTags = new SearchTags(tags);
+    this.searchTags = new SearchTagList(tags);
   }
 
   async render() {

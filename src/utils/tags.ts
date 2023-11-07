@@ -10,5 +10,9 @@ export const tags = [
   {
     tag: 'яндекс станция 2',
     href: '/product?id=165687389'
+  },
+  {
+    tag: 'яндекс станция 2',
+    href: '/product?id=165687389'
   }
 ];
