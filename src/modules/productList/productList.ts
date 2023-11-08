@@ -3,14 +3,17 @@ import { View } from '../../utils/view';
 import html from './productList.tpl.html';
 import { ProductData } from 'types';
 import { Product } from '../product/product';
+import { analyticsService } from '../../services/analytics.service';
 
 export class ProductList {
   view: View;
   products: ProductData[];
+  observer: IntersectionObserver;
 
   constructor() {
     this.products = [];
     this.view = new ViewTemplate(html).cloneView();
+    this.observer = new IntersectionObserver(this._observeProductView, { threshold: 0.5 });
   }
 
   attach($root: HTMLElement) {
@@ -30,6 +33,28 @@ export class ProductList {
       const productComp = new Product(product);
       productComp.render();
       productComp.attach(this.view.root);
+
+      this.observer.observe(productComp.view.root);
     });
   }
+
+  private _observeProductView = (entries: IntersectionObserverEntry[], observer: any) => {
+    entries.forEach((entry) => {
+      
+      if (entry.isIntersecting) {
+        const productElement = entry.target as HTMLElement;
+
+        const productId = Number(productElement.dataset.productId);
+        const productData = this.products.find(i => i.id === productId);
+        
+        if (productData) {
+          const eventType = productData && Object.keys(productData.log).length > 0 ? 'viewCardPromo' : 'viewCard';
+
+          analyticsService.sendAlaytics(eventType, productData);
+          observer.unobserve(entry.target);
+        }
+      } 
+    });
+  }
+
 }
