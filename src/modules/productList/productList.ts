@@ -50,13 +50,8 @@ export class ProductList {
         if (productData) {
           const eventType = productData && Object.keys(productData.log).length > 0 ? 'viewCardPromo' : 'viewCard';
 
-          //fetch secret key
-          fetch(`/api/getProductSecretKey?id=${productId}`)
-            .then((res) => res.json())
-            .then((secretKey) => {
-              analyticsService.sendAlaytics(eventType, { ...productData, secretKey });
-            })
-            .then(() => observer.unobserve(entry.target))
+          analyticsService.sendAlaytics(eventType, productData);
+          observer.unobserve(entry.target);
         }
       } 
     });

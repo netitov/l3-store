@@ -46,12 +46,12 @@ class Checkout extends Component {
       })
 
       const productIds = this.products.map((i) => i.id);
-      analyticsService.sendAlaytics('purchase', { orderId: genUUID(), totalPrice: this.cartPrice, productIds });
+      await analyticsService.sendAlaytics('purchase', { orderId: genUUID(), totalPrice: this.cartPrice, productIds });
 
     } catch(error) {
       console.log(error);
-    }
-    finally {
+      
+    } finally {
       window.location.href = '/?isSuccessOrder';
     }
   }
