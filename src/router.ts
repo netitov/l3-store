@@ -19,7 +19,6 @@ export default class Router {
     this.$appRoot = document.querySelector('.js__root');
 
     window.addEventListener('load', this.route.bind(this));
-    window.addEventListener('hashchange', this.route.bind(this));
 
     document.addEventListener('click', (e) => {
       const target = e.target as HTMLElement;
