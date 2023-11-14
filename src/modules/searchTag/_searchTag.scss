@@ -1,0 +1,19 @@
+.searchTag {
+  border-radius: 8px;
+  background: #F6F6FA;
+  text-decoration: none;
+  display: inline-flex;
+  margin-top: 4px;
+
+  &__text {
+    background: linear-gradient(93deg, #DA15B8 4.93%, #8D06CC 100%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    padding: 4px 6px 8px;
+  }
+
+  &:hover &__text, &__text_active {
+    -webkit-text-fill-color: var(--key-color-dark);
+  }
+}
