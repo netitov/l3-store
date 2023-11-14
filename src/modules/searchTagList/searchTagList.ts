@@ -19,6 +19,11 @@ export class SearchTagList {
 
   async render() {
 
+    this.view.root.innerHTML = '';
+
+    const exampleNode = document.createTextNode('Например, ');
+    this.view.root.appendChild(exampleNode);
+
     this.tagList.forEach((tag, index) => {
       const tagComp = new SearchTag(tag);
       tagComp.render();
