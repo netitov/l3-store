@@ -46,6 +46,7 @@ class ProductDetail extends Component {
 
     //apply styles on favBtn if product is in favorites
     if (this.isInFavorites) this._toggleFavoritesIcon('#heart-filled');
+    else this._toggleFavoritesIcon('#heart');
 
     fetch(`/api/getProductSecretKey?id=${id}`)
       .then((res) => res.json())
