@@ -79,7 +79,7 @@ img {
 }
 
 .content {
-  min-height: 60vh;
+  min-height: calc(100vh - 212px);
   box-sizing: border-box;
   padding: 30px 0 72px;
   position: relative;

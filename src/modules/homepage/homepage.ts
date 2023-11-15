@@ -38,6 +38,8 @@ class Homepage extends Component {
         innerText:
           'Заказ оформлен. Деньги спишутся с вашей карты, менеджер может позвонить, чтобы уточнить детали доставки'
       });
+    } else {
+      this.view.notifies.innerHTML = '';
     }
   }
 }
