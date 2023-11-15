@@ -4,6 +4,8 @@ import { formatPrice } from '../../utils/helpers';
 import { ProductData } from 'types';
 import html from './productDetail.tpl.html';
 import { cartService } from '../../services/cart.service';
+import { userService } from '../../services/user.service';
+import { preloader } from '../preloader/preloader';
 
 class ProductDetail extends Component {
   more: ProductList;
@@ -17,6 +19,10 @@ class ProductDetail extends Component {
   }
 
   async render() {
+    window.scrollTo({ top: 0 });
+
+    preloader.show();
+
     const urlParams = new URLSearchParams(window.location.search);
     const productId = Number(urlParams.get('id'));
 
@@ -36,6 +42,7 @@ class ProductDetail extends Component {
     const isInCart = await cartService.isInCart(this.product);
 
     if (isInCart) this._setInCart();
+    else this._setOutOfCart();
 
     fetch(`/api/getProductSecretKey?id=${id}`)
       .then((res) => res.json())
@@ -43,11 +50,17 @@ class ProductDetail extends Component {
         this.view.secretKey.setAttribute('content', secretKey);
       });
 
-    fetch('/api/getPopularProducts')
+    const userId = await userService.getId();
+    fetch('/api/getPopularProducts', {
+      headers: {
+        'x-userid': userId
+      }
+    })
       .then((res) => res.json())
       .then((products) => {
         this.more.update(products);
-      });
+      })
+      .finally(() => preloader.hide());
   }
 
   private _addToCart() {
@@ -60,6 +73,11 @@ class ProductDetail extends Component {
   private _setInCart() {
     this.view.btnBuy.innerText = '✓ В корзине';
     this.view.btnBuy.disabled = true;
+  }
+
+  private _setOutOfCart() {
+    this.view.btnBuy.innerText = 'В корзину';
+    this.view.btnBuy.disabled = false;
   }
 }
 
